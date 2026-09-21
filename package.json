@@ -1,0 +1,41 @@
+{
+  "name": "tp-cli", 
+  "version": "1.0.0",
+  "description": "A cross-platform CLI to check and update developer tools (Node, Git, Python, etc.)",
+  "type": "module",
+  "bin": {
+    "tp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "update",
+    "node",
+    "python",
+    "git",
+    "developer-tools",
+    "package-manager"
+  ],
+  "author": "Abdullatif Rabie  <abdullatifrabie@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "execa": "^8.0.1",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  }
+}
