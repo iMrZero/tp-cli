@@ -1,10 +1,16 @@
 # dev-updater
 
-A cross-platform CLI for checking whether common developer tools are up to date and updating them with the right package manager for the current OS.
+A lightweight cross-platform CLI for checking and updating common developer tools.
 
-## Overview
+## Why this tool?
 
-This project scans installed tool versions and compares them against the latest known releases from public package registries and release feeds. It can then suggest or execute OS-appropriate upgrade commands for:
+Keeping local development tools current is often repetitive and platform-specific. This package helps you:
+
+- check the installed version of key tools
+- compare them against the latest available release
+- run the correct upgrade command for your OS and package manager
+
+Supported tools include:
 
 - Node.js
 - npm
@@ -14,31 +20,21 @@ This project scans installed tool versions and compares them against the latest 
 
 ## Features
 
-- Check the current installed version of each supported tool
-- Fetch the latest known version from public sources
-- Display current vs latest in a readable CLI summary
-- Run platform-aware update commands for Windows, macOS, and Linux
-- Keep the CLI lightweight and dependency-focused using modern TypeScript tooling
+- Detect the current version of each supported tool
+- Fetch the latest version from official release sources
+- Display current vs latest versions in a readable terminal output
+- Use OS-aware upgrade logic for Windows, macOS, and Linux
+- Update a single tool without manually remembering the correct command
 
-## Project structure
+## Install
 
-- `src/index.ts` — CLI entrypoint and command definitions
-- `src/api.ts` — version-fetching logic for package registries and release APIs
-- `src/osDetect.ts` — OS/package manager detection utilities
-- `tsup.config.ts` — build config for bundling the CLI
-- `bin/tp.mjs` — local helper script for the binary entrypoint
+### Global install
 
-## Requirements
+```bash
+npm install -g tp-cli
+```
 
-- Node.js 18 or newer
-- A supported shell environment for the tools you want to update
-- Appropriate package managers on the machine, such as:
-  - `fnm`, `nvm`, or `volta` for Node
-  - `winget`, `scoop`, `brew`, `apt`, or `dnf` depending on OS
-
-## Installation
-
-Clone the repository and install dependencies:
+### Local development install
 
 ```bash
 git clone <your-repo-url>
@@ -46,29 +42,21 @@ cd dev-updater
 npm install
 ```
 
-Build the CLI locally:
-
-```bash
-npm run build
-```
-
-To use it globally while developing:
-
-```bash
-npm link
-```
-
 ## Usage
 
-The package binary is exposed as `tp`.
+After installing, the CLI command is:
 
-### Check all supported tools
+```bash
+tp
+```
+
+### Check all tools
 
 ```bash
 tp check
 ```
 
-This prints the current version of each tool and, where available, the latest version from the remote source.
+This checks the installed version for all supported tools and prints the latest known version when available.
 
 ### Update a specific tool
 
@@ -87,17 +75,17 @@ tp update node
 tp update python
 ```
 
-If a supported package manager is not available for the current platform, the CLI will report that it could not find a supported updater.
+If a supported updater is not available for the current system, the CLI will explain that it could not find a supported way to update that tool.
 
-## Supported tools
+## Supported tools and behavior
 
-| Tool    | Check command                             | Latest source               |
-| ------- | ----------------------------------------- | --------------------------- |
-| Node.js | `node -v`                                 | Node.js LTS API             |
-| npm     | `npm -v`                                  | npm registry                |
-| pnpm    | `pnpm -v`                                 | pnpm registry               |
-| Git     | `git --version`                           | OS-specific package manager |
-| Python  | `python --version` or `python3 --version` | Python release feed         |
+| Tool    | Check command                            | Update strategy                                                    |
+| ------- | ---------------------------------------- | ------------------------------------------------------------------ |
+| Node.js | `node -v`                                | Uses `fnm`, `nvm`, `volta`, or returns a clear unsupported message |
+| npm     | `npm -v`                                 | Runs `npm install -g npm@latest`                                   |
+| pnpm    | `pnpm -v`                                | Runs `npm install -g pnpm@latest`                                  |
+| Git     | `git --version`                          | Uses `winget`, `scoop`, `brew`, or `apt` depending on OS           |
+| Python  | `python --version` / `python3 --version` | Uses `winget`, `scoop`, `brew`, or `apt` depending on OS           |
 
 ## Development
 
@@ -107,24 +95,35 @@ Run the CLI in development mode:
 npm run dev -- check
 ```
 
-Build the production bundle:
+Build the package:
 
 ```bash
 npm run build
 ```
 
-## Scripts
+Link the local binary for testing:
 
 ```bash
-npm run dev
-npm run build
+npm link
+```
+
+## Project structure
+
+```text
+src/
+  api.ts        # Fetches latest release data
+  index.ts      # CLI commands and tool definitions
+  osDetect.ts   # OS and package-manager detection
+bin/
+  tp.mjs        # Binary helper
+package.json    # Package metadata and CLI binary config
 ```
 
 ## Notes
 
-- The tool uses platform-aware update logic to minimize OS-specific failure cases.
-- Some update steps require elevated privileges, such as `sudo` on Linux.
-- Git latest version is intentionally treated as skipped in some cases to avoid unnecessary API rate-limit issues.
+- Some upgrades require administrator privileges or shell tools that are already installed on your machine.
+- The CLI is designed to be simple and useful for local developer environments.
+- It focuses on the most common developer tools rather than a broad system package manager.
 
 ## License
 
