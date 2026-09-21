@@ -1,6 +1,4 @@
 // src/api.ts
-import fetch from "node-fetch";
-
 export async function getLatestNodeLTS(): Promise<string> {
   const res = await fetch("https://nodejs.org/dist/index.json");
   const data = (await res.json()) as any[];
