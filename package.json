@@ -1,6 +1,6 @@
 {
-  "name": "@mr_zero/tp-cli", 
-  "version": "1.0.0",
+  "name": "@mr_zero/tp-cli",
+  "version": "1.0.1",
   "description": "A cross-platform CLI to check and update developer tools (Node, Git, Python, etc.)",
   "type": "module",
   "bin": {
